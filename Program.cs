@@ -45,24 +45,24 @@ namespace UpYunLibrary
             /// 如缩略图间隔标志符为 ! ，密钥为 bac，上传文件路径为 /folder/test.jpg ，那么该图片的对外访问地址为： http://空间域名/folder/test.jpg!bac
             // upyun.setFileSecret("bac");
             Console.WriteLine("上传文件");
-            bool b = upyun.writeFile("/a/test.jpg", postArray, true);
+            bool b = upyun.WriteFile("/a/test.jpg", postArray, true);
             // 上传文件时可使用 upyun.writeFile("/a/test.jpg",postArray, true); //进行父级目录的自动创建（最深10级目录）
             Console.WriteLine(b);
 
             /// 获取上传后的图片信息（仅图片空间有返回数据）
             Console.WriteLine("获取上传后的图片信息");
-            Console.WriteLine(upyun.getWritedFileInfo("x-upyun-width"));
-            Console.WriteLine(upyun.getWritedFileInfo("x-upyun-height"));
-            Console.WriteLine(upyun.getWritedFileInfo("x-upyun-frames"));
-            Console.WriteLine(upyun.getWritedFileInfo("x-upyun-file-type"));
+            Console.WriteLine(upyun.GetWritedFileInfo("x-upyun-width"));
+            Console.WriteLine(upyun.GetWritedFileInfo("x-upyun-height"));
+            Console.WriteLine(upyun.GetWritedFileInfo("x-upyun-frames"));
+            Console.WriteLine(upyun.GetWritedFileInfo("x-upyun-file-type"));
 
             /// 读取目录
             Console.WriteLine("读取目录");
-            ArrayList str = upyun.readDir("/a/");
+            var str = upyun.ReadDir("/a/");
             foreach (var item in str)
             {
                 FolderItem a = (FolderItem)item;
-                Console.WriteLine(a.filename);
+                Console.WriteLine(a.Filename);
             }
 
             /// 获取某个目录的空间占用大小
@@ -75,12 +75,12 @@ namespace UpYunLibrary
 
             /// 另外推荐通过web访问文件接口下载文件而非api接口
             Console.WriteLine("读取文件");
-            byte[] contents = upyun.readFile("/a/test.jpg");
+            byte[] contents = upyun.ReadFile("/a/test.jpg");
             Console.WriteLine(contents.Length);
 
             /// 获取文件信息 return Hashtable('type'=> file | folder, 'size'=> file size, 'date'=> unix time) 或 null
             Console.WriteLine("获取文件信息");
-            Hashtable ht = upyun.getFileInfo("/a/test.jpg");
+            Hashtable ht = upyun.GetFileInfo("/a/test.jpg");
             Console.WriteLine(ht["type"]);
             Console.WriteLine(ht["size"]);
             Console.WriteLine(ht["date"]);

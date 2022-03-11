@@ -31,7 +31,15 @@ namespace UpYunLibrary
         /// Token私钥
         /// </summary>
         public string secret { get; set; }
-        public  string CreatToken(string etime,string secret,string URI)
+        /// <summary>
+        /// 创建一个token，方便从对象储存服务下载文件
+        /// 如果Token 防盗链未启用就不需要
+        /// </summary>
+        /// <param name="etime">有效时间 秒</param>
+        /// <param name="secret">Token 密钥</param>
+        /// <param name="URI">URL</param>
+        /// <returns></returns>
+        public string CreatToken(string etime,string secret,string URI)
         {
             string sign = md5($"{ secret}&{etime}&{URI}");
             //sign = "xxxxxxxxxxxxabcdefghyyyyyyyyyyyy";
@@ -39,6 +47,12 @@ namespace UpYunLibrary
             string _upt = sign + etime;
             return _upt;
         }
+        /// <summary>
+        ///  创建一个token，方便从对象储存服务下载文件
+        /// </summary>
+        /// <param name="etime">有效时间 秒</param>
+        /// <param name="URI">链接</param>
+        /// <returns></returns>
         public string CreatToken(string etime, string URI)
         {
             string sign = md5($"{ this.secret}&{etime}&{URI}");
@@ -225,7 +239,7 @@ namespace UpYunLibrary
            * @param $path 目标路径
            * return 空间占用量，失败返回 null
            */
-        public long getBucketUsage()
+        public long GetBucketUsage()
         {
             return getFolderUsage("/");
         }
@@ -259,7 +273,7 @@ namespace UpYunLibrary
         * @param $path 目录路径
         * return true or false
         */
-        public bool rmDir(string path)
+        public bool RemoveDir(string path)
         {
             Hashtable headers = new Hashtable();
             return delete(path, headers);
@@ -270,7 +284,7 @@ namespace UpYunLibrary
         * @param $path 目录路径
         * return array 数组 或 null
         */
-        public ArrayList readDir(string url)
+        public List<FolderItem> ReadDir(string url)
         {
             Hashtable headers = new Hashtable();
             byte[] a = null;
@@ -282,7 +296,7 @@ namespace UpYunLibrary
             strhtml = strhtml.Replace("\n", "\\");
             string[] ss = strhtml.Split('\\');
             int i = 0;
-            ArrayList AL = new ArrayList();
+            List<FolderItem> AL =new  List<FolderItem>();
             while (i < ss.Length)
             {
                 FolderItem fi = new FolderItem(ss[i], ss[i + 1], int.Parse(ss[i + 2]), int.Parse(ss[i + 3]));
@@ -299,7 +313,7 @@ namespace UpYunLibrary
         * @param $datas 文件内容 或 文件IO数据流
         * return true or false
         */
-        public bool writeFile(string path, byte[] data, bool auto_mkdir)
+        public bool WriteFile(string path, byte[] data, bool auto_mkdir)
         {
             Hashtable headers = new Hashtable();
             this.auto_mkdir = auto_mkdir;
@@ -322,7 +336,7 @@ namespace UpYunLibrary
         * @param $file 文件路径（包含文件名）
         * return true or false
         */
-        public bool deleteFile(string path)
+        public bool DeleteFile(string path)
         {
             Hashtable headers = new Hashtable();
             return delete(path, headers);
@@ -334,7 +348,7 @@ namespace UpYunLibrary
         * @param $output_file 可传递文件IO数据流（默认为 null，结果返回文件内容，如设置文件数据流，将返回 true or false）
         * return 文件内容 或 null
         */
-        public byte[] readFile(string path)
+        public byte[] ReadFile(string path)
         {
             Hashtable headers = new Hashtable();
             byte[] a = null;
@@ -361,7 +375,7 @@ namespace UpYunLibrary
         * @param $str （文件 MD5 校验码）
         * return null;
         */
-        public void setFileSecret(string str)
+        public void SetFileSecret(string str)
         {
             this.file_secret = str;
         }
@@ -370,7 +384,7 @@ namespace UpYunLibrary
         * @param $file 文件路径（包含文件名）
         * return array('type'=> file | folder, 'size'=> file size, 'date'=> unix time) 或 null
         */
-        public Hashtable getFileInfo(string file)
+        public Hashtable GetFileInfo(string file)
         {
             Hashtable headers = new Hashtable();
             byte[] a = null;
@@ -391,13 +405,13 @@ namespace UpYunLibrary
             return ht;
         }
         //获取上传后的图片信息（仅图片空间有返回数据）
-        public object getWritedFileInfo(string key)
+        public object GetWritedFileInfo(string key)
         {
             if (this.tmp_infos == new Hashtable()) return "";
             return this.tmp_infos[key];
         }
         //计算文件的MD5码
-        public static string md5_file(string pathName)
+        public static string MD5_file(string pathName)
         {
             string strResult = "";
             string strHashData = "";
